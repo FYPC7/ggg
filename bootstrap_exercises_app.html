@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap - Ejercicios Estadísticos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffeef4, #e8f4f8, #f0f8e8, #fff5e8);
+            min-height: 100vh;
+            color: #5a5a5a;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #f8d7da, #d4f6e8);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #6c5b7b;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header p {
+            color: #8b7d8b;
+            font-size: 1.1rem;
+        }
+
+        .exercise-selector {
+            background: linear-gradient(45deg, #e8f4f8, #ffeef4);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .exercise-selector h3 {
+            color: #5a85a1;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .exercise-btn {
+            background: linear-gradient(45deg, #c8e6c9, #b3e5fc);
+            border: none;
+            padding: 15px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #4a6741;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .exercise-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .exercise-btn.active {
+            background: linear-gradient(45deg, #ffcdd2, #d1c4e9);
+            color: #6a4c93;
+        }
+
+        .exercise-content {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            border: 2px solid #f0f0f0;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #6c5b7b;
+            font-weight: 600;
+        }
+
+        .input-group input, .input-group textarea, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e8e8e8;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            background: #fafafa;
+        }
+
+        .input-group input:focus, .input-group textarea:focus, .input-group select:focus {
+            outline: none;
+            border-color: #b3e5fc;
+            background: #ffffff;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(45deg, #81c784, #64b5f6);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        }
+
+        .results {
+            background: linear-gradient(135deg, #f0f8e8, #e8f4f8);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .results h4 {
+            color: #4a6741;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .result-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border-left: 4px solid #81c784;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        #histogramCanvas {
+            max-width: 100%;
+            height: 300px;
+            border-radius: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            color: #81c784;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #f44336;
+            margin-top: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Bootstrap Estadístico</h1>
+            <p>Aplicación interactiva para resolver ejercicios de remuestreo Bootstrap</p>
+        </div>
+
+        <div class="exercise-selector">
+            <h3>📊 Selecciona un Ejercicio</h3>
+            <div class="exercise-grid">
+                <button class="exercise-btn active" onclick="selectExercise(1)">Ejercicio 1: Media</button>
+                <button class="exercise-btn" onclick="selectExercise(2)">Ejercicio 2: Dos Medias</button>
+                <button class="exercise-btn" onclick="selectExercise(3)">Ejercicio 3: Proporciones</button>
+                <button class="exercise-btn" onclick="selectExercise(4)">Ejercicio 4: Correlación</button>
+                <button class="exercise-btn" onclick="selectExercise(5)">Ejercicio 5: Mediana</button>
+                <button class="exercise-btn" onclick="selectExercise(6)">Ejercicio 6: Varianzas</button>
+                <button class="exercise-btn" onclick="selectExercise(7)">Ejercicio 7: Regresión</button>
+                <button class="exercise-btn" onclick="selectExercise(8)">Ejercicio 8: Dif. Proporciones</button>
+                <button class="exercise-btn" onclick="selectExercise(9)">Ejercicio 9: Paramétrico</button>
+                <button class="exercise-btn" onclick="selectExercise(10)">Ejercicio 10: Dependientes</button>
+            </div>
+        </div>
+
+        <div id="exerciseContent" class="exercise-content">
+            <!-- Exercise 1: Media -->
+            <div id="exercise1" class="exercise">
+                <h3>📈 Ejercicio 1: Estimación de la Media</h3>
+                <p><strong>Contexto:</strong> Pesos de productos manufacturados (en gramos)</p>
+                
+                <div class="input-group">
+                    <label>Datos (separados por comas):</label>
+                    <textarea id="data1" rows="3" placeholder="502, 498, 505, 501, 499, 503, 497, 504, 500, 502, 498, 506, 499, 501, 504">502, 498, 505, 501, 499, 503, 497, 504, 500, 502, 498, 506, 499, 501, 504</textarea>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Nivel de Confianza (%):</label>
+                        <select id="confidence1">
+                            <option value="90">90%</option>
+                            <option value="95" selected>95%</option>
+                            <option value="99">99%</option>
+                        </select>
+                    </div>
+                    <button class="calculate-btn" onclick="calculateExercise1()">Calcular Bootstrap</button>
+                </div>
+                
+                <div id="results1" class="results hidden"></div>
+            </div>
+
+            <!-- Exercise 2: Dos Medias -->
+            <div id="exercise2" class="exercise hidden">
+                <h3>⚖️ Ejercicio 2: Comparación de Dos Medias</h3>
+                <p><strong>Contexto:</strong> Tiempo de respuesta de dos sistemas (en milisegundos)</p>
+                
+                <div class="input-group">
+                    <label>Sistema A:</label>
+                    <textarea id="dataA2" rows="2" placeholder="120, 115, 125, 118, 122, 119, 123, 117, 121, 124">120, 115, 125, 118, 122, 119, 123, 117, 121, 124</textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label>Sistema B:</label>
+                    <textarea id="dataB2" rows="2" placeholder="135, 132, 138, 134, 136, 133, 139, 131, 137, 140">135, 132, 138, 134, 136, 133, 139, 131, 137, 140</textarea>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Nivel de Confianza (%):</label>
+                        <select id="confidence2">
+                            <option value="90">90%</option>
+                            <option value="95" selected>95%</option>
+                            <option value="99">99%</option>
+                        </select>
+                    </div>
+                    <button class="calculate-btn" onclick="calculateExercise2()">Calcular Bootstrap</button>
+                </div>
+                
+                <div id="results2" class="results hidden"></div>
+            </div>
+
+            <!-- Exercise 3: Proporciones -->
+            <div id="exercise3" class="exercise hidden">
+                <h3>🎯 Ejercicio 3: Estimación de Proporciones</h3>
+                <p><strong>Contexto:</strong> Éxito en tratamiento médico (1 = éxito, 0 = fallo)</p>
+                
+                <div class="input-group">
+                    <label>Datos (0s y 1s separados por comas):</label>
+                    <textarea id="data3" rows="3" placeholder="1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1">1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1</textarea>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Nivel de Confianza (%):</label>
+                        <select id="confidence3">
+                            <option value="90" selected>90%</option>
+                            <option value="95">95%</option>
+                            <option value="99">99%</option>
+                        </select>
+                    </div>
+                    <button class="calculate-btn" onclick="calculateExercise3()">Calcular Bootstrap</button>
+                </div>
+                
+                <div id="results3" class="results hidden"></div>
+            </div>
+
+            <!-- Exercise 4: Correlación -->
+            <div id="exercise4" class="exercise hidden">
+                <h3>📊 Ejercicio 4: Correlación Bootstrap</h3>
+                <p><strong>Contexto:</strong> Relación entre horas de estudio y calificaciones</p>
+                
+                <div class="input-group">
+                    <label>Horas de estudio:</label>
+                    <textarea id="dataX4" rows="2" placeholder="2, 4, 3, 5, 1, 6, 3, 4, 2, 5, 7, 3, 4, 6, 2">2, 4, 3, 5, 1, 6, 3, 4, 2, 5, 7, 3, 4, 6, 2</textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label>Calificaciones:</label>
+                    <textarea id="dataY4" rows="2" placeholder="65, 78, 72, 85, 58, 88, 70, 79, 63, 82, 92, 68, 75, 86, 61">65, 78, 72, 85, 58, 88, 70, 79, 63, 82, 92, 68, 75, 86, 61</textarea>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Nivel de Confianza (%):</label>
+                        <select id="confidence4">
+                            <option value="90">90%</option>
+                            <option value="95" selected>95%</option>
+                            <option value="99">99%</option>
+                        </select>
+                    </div>
+                    <button class="calculate-btn" onclick="calculateExercise4()">Calcular Bootstrap</button>
+                </div>
+                
+                <div id="results4" class="results hidden"></div>
+            </div>
+
+            <!-- Exercise 5: Mediana -->
+            <div id="exercise5" class="exercise hidden">
+                <h3>📊 Ejercicio 5: Mediana y Percentiles</h3>
+                <p><strong>Contexto:</strong> Ingresos mensuales de empleados (en miles)</p>
+                
+                <div class="input-group">
+                    <label>Datos:</label>
+                    <textarea id="data5" rows="3" placeholder="2.5, 3.2, 2.8, 3.5, 2.9, 3.1, 2.7, 3.4, 3.0, 3.3, 2.6, 3.6, 2.9, 3.2, 2.8, 3.1, 2.7, 3.3, 3.0, 2.9">2.5, 3.2, 2.8, 3.5, 2.9, 3.1, 2.7, 3.4, 3.0, 3.3, 2.6, 3.6, 2.9, 3.2, 2.8, 3.1, 2.7, 3.3, 3.0, 2.9</textarea>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Nivel de Confianza (%):</label>
+                        <select id="confidence5">
+                            <option value="90">90%</option>
+                            <option value="95" selected>95%</option>
+                            <option value="99">99%</option>
+                        </select>
+                    </div>
+                    <button class="calculate-btn" onclick="calculateExercise5()">Calcular Bootstrap</button>
+                </div>
+                
+                <div id="results5" class="results hidden"></div>
+            </div>
+
+            <!-- Exercise 6: Varianzas -->
+            <div id="exercise6" class="exercise hidden">
+                <h3>⚖️ Ejercicio 6: Razón de Varianzas</h3>
+                <p><strong>Contexto:</strong> Variabilidad en dos procesos de producción</p>
+                
+                <div class="input-group">
+                    <label>Proceso 1:</label>
+                    <textarea id="dataA6" rows="2" placeholder="45.2, 44.8, 45.5, 44.9, 45.1, 45.0, 44.7, 45.3, 44.6, 45.4">45.2, 44.8, 45.5, 44.9, 45.1, 45.0, 44.7, 45.3, 44.6, 45.4</textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label>Proceso 2:</label>
+                    <textarea id="dataB6" rows="2" placeholder="43.8, 44.5, 43.2, 44.1, 43.9, 44.3, 43.6, 44.0, 43.7, 44.2">43.8, 44.5, 43.2, 44.1, 43.9, 44.3, 43.6, 44.0, 43.7, 44.2</textarea>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Nivel de Confianza (%):</label>
+                        <select id="confidence6">
+                            <option value="90">90%</option>
+                            <option value="95" selected>95%</option>
+                            <option value="99">99%</option>
+                        </select>
+                    </div>
+                    <button class="calculate-btn" onclick="calculateExercise6()">Calcular Bootstrap</button>
+                </div>
+                
+                <div id="results6" class="results hidden"></div>
+            </div>
+
+            <!-- Exercise 7: Regresión -->
+            <div id="exercise7" class="exercise hidden">
+                <h3>📈 Ejercicio 7: Bootstrap en Regresión</h3>
+                <p><strong>Contexto:</strong> Predicción de ventas basada en publicidad</p>
+                
+                <div class="input-group">
+                    <label>Publicidad (x):</label>
+                    <textarea id="dataX7" rows="2" placeholder="10, 15, 20, 25, 30, 35, 40, 45, 50, 55">10, 15, 20, 25, 30, 35, 40, 45, 50, 55</textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label>Ventas (y):</label>
+                    <textarea id="dataY7" rows="2" placeholder="23, 28, 35, 41, 46, 52, 58, 63, 69, 74">23, 28, 35, 41, 46, 52, 58, 63, 69, 74</textarea>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Nivel de Confianza (%):</label>
+                        <select id="confidence7">
+                            <option value="90">90%</option>
+                            <option value="95" selected>95%</option>
+                            <option value="99">99%</option>
+                        </select>
+                    </div>
+                    <button class="calculate-btn" onclick="calculateExercise7()">Calcular Bootstrap</button>
+                </div>
+                
+                <div id="results7" class="results hidden"></div>
+            </div>
+
+            <!-- Exercise 8: Diferencia Proporciones -->
+            <div id="exercise8" class="exercise hidden">
+                <h3>⚖️ Ejercicio 8: Diferencia de Proporciones</h3>
+                <p><strong>Contexto:</strong> Efectividad de dos tratamientos</p>
+                
+                <div class="input-group">
+                    <label>Tratamiento A (0s y 1s):</label>
+                    <textarea id="dataA8" rows="2" placeholder="1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1">1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1</textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label>Tratamiento B (0s y 1s):</label>
+                    <textarea id="dataB8" rows="2" placeholder="1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0">1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0</textarea>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Nivel de Confianza (%):</label>
+                        <select id="confidence8">
+                            <option value="90">90%</option>
+                            <option value="95" selected>95%</option>
+                            <option value="99">99%</option>
+                        </select>
+                    </div>
+                    <button class="calculate-btn" onclick="calculateExercise8()">Calcular Bootstrap</button>
+                </div>
+                
+                <div id="results8" class="results hidden"></div>
+            </div>
+
+            <!-- Exercise 9: Paramétrico -->
+            <div id="exercise9" class="exercise hidden">
+                <h3>📊 Ejercicio 9: Bootstrap Paramétrico</h3>
+                <p><strong>Contexto:</strong> Tiempo hasta fallo de componentes electrónicos (días) - Distribución Exponencial</p>
+                
+                <div class="input-group">
+                    <label>Datos:</label>
+                    <textarea id="data9" rows="3" placeholder="145, 167, 132, 178, 156, 143, 189, 134, 165, 152, 171, 148, 163, 139, 175">145, 167, 132, 178, 156, 143, 189, 134, 165, 152, 171, 148, 163, 139, 175</textarea>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Nivel de Confianza (%):</label>
+                        <select id="confidence9">
+                            <option value="90">90%</option>
+                            <option value="95" selected>95%</option>
+                            <option value="99">99%</option>
+                        </select>
+                    </div>
+                    <button class="calculate-btn" onclick="calculateExercise9()">Calcular Bootstrap</button>
+                </div>
+                
+                <div id="results9" class="results hidden"></div>
+            </div>
+
+            <!-- Exercise 10: Dependientes -->
+            <div id="exercise10" class="exercise hidden">
+                <h3>📈 Ejercicio 10: Bootstrap con Datos Dependientes</h3>
+                <p><strong>Contexto:</strong> Retornos diarios de acciones (%) - Bootstrap por bloques</p>
+                
+                <div class="input-group">
+                    <label>Datos:</label>
+                    <textarea id="data10" rows="3" placeholder="0.5, 1.2, -0.3, 0.8, 1.1, -0.6, 0.4, 0.9, -0.2, 1.3, 0.7, -0.4, 0.6, 1.0, -0.1, 0.8, 1.2, -0.5, 0.3, 0.9">0.5, 1.2, -0.3, 0.8, 1.1, -0.6, 0.4, 0.9, -0.2, 1.3, 0.7, -0.4, 0.6, 1.0, -0.1, 0.8, 1.2, -0.5, 0.3, 0.9</textarea>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Tamaño de Bloque:</label>
+                        <input type="number" id="blockSize10" value="4" min="2" max="10">
+                    </div>
+                    <div class="input-group">
+                        <label>Nivel de Confianza (%):</label>
+                        <select id="confidence10">
+                            <option value="90">90%</option>
+                            <option value="95" selected>95%</option>
+                            <option value="99">99%</option>
+                        </select>
+                    </div>
+                    <button class="calculate-btn" onclick="calculateExercise10()">Calcular Bootstrap</button>
+                </div>
+                
+                <div id="results10" class="results hidden"></div>
+            </div>
+        </div>
+
+        <div class="chart-container hidden" id="chartContainer">
+            <h4>📊 Distribución Bootstrap</h4>
+            <canvas id="histogramCanvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        let currentExercise = 1;
+        let bootstrapSamples = 1000;
+
+        function selectExercise(exerciseNum) {
+            // Update active button
+            document.querySelectorAll('.exercise-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Hide all exercises
+            document.querySelectorAll('.exercise').forEach(ex => ex.classList.add('hidden'));
+            
+            // Show selected exercise
+            document.getElementById(`exercise${exerciseNum}`).classList.remove('hidden');
+            
+            // Hide results and chart
+            document.getElementById(`results${currentExercise}`).classList.add('hidden');
+            document.getElementById('chartContainer').classList.add('hidden');
+            
+            currentExercise = exerciseNum;
+        }
+
+        function parseData(dataString) {
+            return dataString.split(',').map(x => parseFloat(x.trim())).filter(x => !isNaN(x));
+        }
+
+        function mean(arr) {
+            return arr.reduce((a, b) => a + b, 0) / arr.length;
+        }
+
+        function variance(arr) {
+            const m = mean(arr);
+            return arr.reduce((sum, x) => sum + Math.pow(x - m, 2), 0) / (arr.length - 1);
+        }
+
+        function standardDeviation(arr) {
+            return Math.sqrt(variance(arr));
+        }
+
+        function median(arr) {
+            const sorted = [...arr].sort((a, b) => a - b);
+            const mid = Math.floor(sorted.length / 2);
+            return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+        }
+
+        function percentile(arr, p) {
+            const sorted = [...arr].sort((a, b) => a - b);
+            const index = (p / 100) * (sorted.length - 1);
+            const lower = Math.floor(index);
+            const upper = Math.ceil(index);
+            const weight = index % 1;
+            return sorted[lower] * (1 - weight) + sorted[upper] * weight;
+        }
+
+        function correlation(x, y) {
+            const n = x.length;
+            const sumX = x.reduce((a, b) => a + b, 0);
+            const sumY = y.reduce((a, b) => a + b, 0);
+            const sumXY = x.reduce((sum, xi, i) => sum + xi * y[i], 0);
+            const sumX2 = x.reduce((sum, xi) => sum + xi * xi, 0);
+            const sumY2 = y.reduce((sum, yi) => sum + yi * yi, 0);
+            
+            return (n * sumXY - sumX * sumY) / Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+        }
+
+        function linearRegression(x, y) {
+            const n = x.length;
+            const sumX = x.reduce((a, b) => a + b, 0);
+            const sumY = y.reduce((a, b) => a + b, 0);
+            const sumXY = x.reduce((sum, xi, i) => sum + xi * y[i], 0);
+            const sumX2 = x.reduce((sum, xi) => sum + xi * xi, 0);
+            
+            const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+            const intercept = (sumY - slope * sumX) / n;
+            
+            return { slope, intercept };
+        }
+
+        function bootstrap(data, statFunc, samples = 1000) {
+            const bootstrapStats = [];
+            const n = data.length;
+            
+            for (let i = 0; i < samples; i++) {
+                const bootstrapSample = [];
+                for (let j = 0; j < n; j++) {
+                    const randomIndex = Math.floor(Math.random() * n);
+                    bootstrapSample.push(data[randomIndex]);
+                }
+                bootstrapStats.push(statFunc(bootstrapSample));
+            }
+            
+            return bootstrapStats;
+        }
+
+        function bootstrapPaired(dataX, dataY, statFunc, samples = 1000) {
+            const bootstrapStats = [];
+            const n = dataX.length;
+            
+            for (let i = 0; i < samples; i++) {
+                const bootstrapX = [];
+                const bootstrapY = [];
+                for (let j = 0; j < n; j++) {
+                    const randomIndex = Math.floor(Math.random() * n);
+                    bootstrapX.push(dataX[randomIndex]);
+                    bootstrapY.push(dataY[randomIndex]);
+                }
+                bootstrapStats.push(statFunc(bootstrapX, bootstrapY));
+            }
+            
+            return bootstrapStats;
+        }
+
+        function blockBootstrap(data, blockSize, statFunc, samples = 1000) {
+            const bootstrapStats = [];
+            const n = data.length;
+            const numBlocks = Math.ceil(n / blockSize);
+            
+            for (let i = 0; i < samples; i++) {
+                const bootstrapSample = [];
+                for (let j = 0; j < numBlocks; j++) {
+                    const startIndex = Math.floor(Math.random() * (n - blockSize + 1));
+                    for (let k = 0; k < blockSize && bootstrapSample.length < n; k++) {
+                        if (startIndex + k < n) {
+                            bootstrapSample.push(data[startIndex + k]);
+                        }
+                    }
+                }
+                bootstrapStats.push(statFunc(bootstrapSample.slice(0, n)));
+            }
+            
+            return bootstrapStats;
+        }
+
+        function getConfidenceInterval(data, confidence) {
+            const sorted = [...data].sort((a, b) => a - b);
+            const alpha = (100 - confidence) / 100;
+            const lowerIndex = Math.floor((alpha / 2) * sorted.length);
+            const upperIndex = Math.floor((1 - alpha / 2) * sorted.length) - 1;
+            
+            return {
+                lower: sorted[lowerIndex],
+                upper: sorted[upperIndex]
+            };
+        }
+
+        function showResults(exerciseNum, results) {
+            const resultsDiv = document.getElementById(`results${exerciseNum}`);
+            resultsDiv.innerHTML = '';
+            resultsDiv.classList.remove('hidden');
+            
+            const title = document.createElement('h4');
+            title.textContent = '📊 Resultados Bootstrap';
+            resultsDiv.appendChild(title);
+            
+            results.forEach(result => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'result-item';
+                resultItem.innerHTML = result;
+                resultsDiv.appendChild(resultItem);
+            });
+        }
+
+        function drawHistogram(data, title) {
+            const canvas = document.getElementById('histogramCanvas');
+            const ctx = canvas.getContext('2d');
+            const container = document.getElementById('chartContainer');
+            
+            // Show chart container
+            container.classList.remove('hidden');
+            
+            // Set canvas size
+            canvas.width = 800;
+            canvas.height = 300;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Calculate histogram
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const numBins = 30;
+            const binWidth = (max - min) / numBins;
+            const bins = new Array(numBins).fill(0);
+            
+            data.forEach(value => {
+                const binIndex = Math.min(Math.floor((value - min) / binWidth), numBins - 1);
+                bins[binIndex]++;
+            });
+            
+            const maxBinCount = Math.max(...bins);
+            
+            // Draw histogram
+            const margin = 50;
+            const chartWidth = canvas.width - 2 * margin;
+            const chartHeight = canvas.height - 2 * margin;
+            const barWidth = chartWidth / numBins;
+            
+            // Set colors
+            const gradient = ctx.createLinearGradient(0, margin, 0, margin + chartHeight);
+            gradient.addColorStop(0, '#64b5f6');
+            gradient.addColorStop(1, '#81c784');
+            
+            // Draw bars
+            bins.forEach((count, i) => {
+                const barHeight = (count / maxBinCount) * chartHeight;
+                const x = margin + i * barWidth;
+                const y = margin + chartHeight - barHeight;
+                
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x, y, barWidth - 1, barHeight);
+            });
+            
+            // Draw axes
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(margin, margin);
+            ctx.lineTo(margin, margin + chartHeight);
+            ctx.lineTo(margin + chartWidth, margin + chartHeight);
+            ctx.stroke();
+            
+            // Add title
+            ctx.fillStyle = '#333';
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(title, canvas.width / 2, 20);
+            
+            // Add axis labels
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText(min.toFixed(3), margin, margin + chartHeight + 20);
+            ctx.textAlign = 'right';
+            ctx.fillText(max.toFixed(3), margin + chartWidth, margin + chartHeight + 20);
+            ctx.textAlign = 'center';
+            ctx.fillText('Valor', canvas.width / 2, margin + chartHeight + 35);
+        }
+
+        // Exercise 1: Media
+        function calculateExercise1() {
+            try {
+                const data = parseData(document.getElementById('data1').value);
+                const confidence = parseInt(document.getElementById('confidence1').value);
+                
+                if (data.length === 0) {
+                    throw new Error('No se pudieron parsear los datos');
+                }
+                
+                const originalMean = mean(data);
+                const bootstrapMeans = bootstrap(data, mean, bootstrapSamples);
+                const ci = getConfidenceInterval(bootstrapMeans, confidence);
+                const bootstrapMean = mean(bootstrapMeans);
+                const bootstrapSD = standardDeviation(bootstrapMeans);
+                
+                const results = [
+                    `<strong>Media Original:</strong> ${originalMean.toFixed(4)}`,
+                    `<strong>Media Bootstrap:</strong> ${bootstrapMean.toFixed(4)}`,
+                    `<strong>Error Estándar Bootstrap:</strong> ${bootstrapSD.toFixed(4)}`,
+                    `<strong>Intervalo de Confianza ${confidence}%:</strong> [${ci.lower.toFixed(4)}, ${ci.upper.toFixed(4)}]`,
+                    `<strong>Muestras Bootstrap:</strong> ${bootstrapSamples}`
+                ];
+                
+                showResults(1, results);
+                drawHistogram(bootstrapMeans, 'Distribución Bootstrap de la Media');
+                
+            } catch (error) {
+                showError(1, error.message);
+            }
+        }
+
+        // Exercise 2: Dos Medias
+        function calculateExercise2() {
+            try {
+                const dataA = parseData(document.getElementById('dataA2').value);
+                const dataB = parseData(document.getElementById('dataB2').value);
+                const confidence = parseInt(document.getElementById('confidence2').value);
+                
+                if (dataA.length === 0 || dataB.length === 0) {
+                    throw new Error('No se pudieron parsear los datos');
+                }
+                
+                const meanA = mean(dataA);
+                const meanB = mean(dataB);
+                const originalDiff = meanA - meanB;
+                
+                const bootstrapDiffs = [];
+                for (let i = 0; i < bootstrapSamples; i++) {
+                    const bootA = bootstrap(dataA, mean, 1)[0];
+                    const bootB = bootstrap(dataB, mean, 1)[0];
+                    bootstrapDiffs.push(bootA - bootB);
+                }
+                
+                const ci = getConfidenceInterval(bootstrapDiffs, confidence);
+                const bootstrapMeanDiff = mean(bootstrapDiffs);
+                const bootstrapSD = standardDeviation(bootstrapDiffs);
+                
+                const results = [
+                    `<strong>Media Sistema A:</strong> ${meanA.toFixed(4)}`,
+                    `<strong>Media Sistema B:</strong> ${meanB.toFixed(4)}`,
+                    `<strong>Diferencia Original (A - B):</strong> ${originalDiff.toFixed(4)}`,
+                    `<strong>Diferencia Bootstrap:</strong> ${bootstrapMeanDiff.toFixed(4)}`,
+                    `<strong>Error Estándar:</strong> ${bootstrapSD.toFixed(4)}`,
+                    `<strong>Intervalo de Confianza ${confidence}%:</strong> [${ci.lower.toFixed(4)}, ${ci.upper.toFixed(4)}]`,
+                    `<strong>Interpretación:</strong> ${ci.lower > 0 ? 'Diferencia significativa (A > B)' : ci.upper < 0 ? 'Diferencia significativa (B > A)' : 'No hay diferencia significativa'}`
+                ];
+                
+                showResults(2, results);
+                drawHistogram(bootstrapDiffs, 'Distribución Bootstrap de la Diferencia de Medias');
+                
+            } catch (error) {
+                showError(2, error.message);
+            }
+        }
+
+        // Exercise 3: Proporciones
+        function calculateExercise3() {
+            try {
+                const data = parseData(document.getElementById('data3').value);
+                const confidence = parseInt(document.getElementById('confidence3').value);
+                
+                if (data.length === 0) {
+                    throw new Error('No se pudieron parsear los datos');
+                }
+                
+                // Validar que solo contenga 0s y 1s
+                if (!data.every(x => x === 0 || x === 1)) {
+                    throw new Error('Los datos deben contener solo 0s y 1s');
+                }
+                
+                const originalProp = mean(data);
+                const bootstrapProps = bootstrap(data, mean, bootstrapSamples);
+                const ci = getConfidenceInterval(bootstrapProps, confidence);
+                const bootstrapMean = mean(bootstrapProps);
+                const bootstrapSD = standardDeviation(bootstrapProps);
+                
+                const successes = data.filter(x => x === 1).length;
+                const total = data.length;
+                
+                const results = [
+                    `<strong>Éxitos:</strong> ${successes} de ${total}`,
+                    `<strong>Proporción Original:</strong> ${originalProp.toFixed(4)} (${(originalProp * 100).toFixed(2)}%)`,
+                    `<strong>Proporción Bootstrap:</strong> ${bootstrapMean.toFixed(4)}`,
+                    `<strong>Error Estándar Bootstrap:</strong> ${bootstrapSD.toFixed(4)}`,
+                    `<strong>Intervalo de Confianza ${confidence}%:</strong> [${ci.lower.toFixed(4)}, ${ci.upper.toFixed(4)}]`,
+                    `<strong>IC en porcentaje:</strong> [${(ci.lower * 100).toFixed(2)}%, ${(ci.upper * 100).toFixed(2)}%]`
+                ];
+                
+                showResults(3, results);
+                drawHistogram(bootstrapProps, 'Distribución Bootstrap de la Proporción');
+                
+            } catch (error) {
+                showError(3, error.message);
+            }
+        }
+
+        // Exercise 4: Correlación
+        function calculateExercise4() {
+            try {
+                const dataX = parseData(document.getElementById('dataX4').value);
+                const dataY = parseData(document.getElementById('dataY4').value);
+                const confidence = parseInt(document.getElementById('confidence4').value);
+                
+                if (dataX.length === 0 || dataY.length === 0) {
+                    throw new Error('No se pudieron parsear los datos');
+                }
+                
+                if (dataX.length !== dataY.length) {
+                    throw new Error('Las dos variables deben tener el mismo número de observaciones');
+                }
+                
+                const originalCorr = correlation(dataX, dataY);
+                const bootstrapCorrs = bootstrapPaired(dataX, dataY, correlation, bootstrapSamples);
+                const ci = getConfidenceInterval(bootstrapCorrs, confidence);
+                const bootstrapMean = mean(bootstrapCorrs);
+                const bootstrapSD = standardDeviation(bootstrapCorrs);
+                
+                const results = [
+                    `<strong>Correlación Original:</strong> ${originalCorr.toFixed(4)}`,
+                    `<strong>Correlación Bootstrap:</strong> ${bootstrapMean.toFixed(4)}`,
+                    `<strong>Error Estándar Bootstrap:</strong> ${bootstrapSD.toFixed(4)}`,
+                    `<strong>Intervalo de Confianza ${confidence}%:</strong> [${ci.lower.toFixed(4)}, ${ci.upper.toFixed(4)}]`,
+                    `<strong>Interpretación:</strong> ${Math.abs(originalCorr) > 0.7 ? 'Correlación fuerte' : Math.abs(originalCorr) > 0.3 ? 'Correlación moderada' : 'Correlación débil'}`,
+                    `<strong>Significancia:</strong> ${(ci.lower > 0 && ci.upper > 0) || (ci.lower < 0 && ci.upper < 0) ? 'Correlación significativa' : 'Correlación no significativa'}`
+                ];
+                
+                showResults(4, results);
+                drawHistogram(bootstrapCorrs, 'Distribución Bootstrap de la Correlación');
+                
+            } catch (error) {
+                showError(4, error.message);
+            }
+        }
+
+        // Exercise 5: Mediana y Percentiles
+        function calculateExercise5() {
+            try {
+                const data = parseData(document.getElementById('data5').value);
+                const confidence = parseInt(document.getElementById('confidence5').value);
+                
+                if (data.length === 0) {
+                    throw new Error('No se pudieron parsear los datos');
+                }
+                
+                const originalMedian = median(data);
+                const originalP25 = percentile(data, 25);
+                const originalP75 = percentile(data, 75);
+                
+                const bootstrapMedians = bootstrap(data, median, bootstrapSamples);
+                const bootstrapP25s = bootstrap(data, arr => percentile(arr, 25), bootstrapSamples);
+                const bootstrapP75s = bootstrap(data, arr => percentile(arr, 75), bootstrapSamples);
+                
+                const ciMedian = getConfidenceInterval(bootstrapMedians, confidence);
+                const ciP25 = getConfidenceInterval(bootstrapP25s, confidence);
+                const ciP75 = getConfidenceInterval(bootstrapP75s, confidence);
+                
+                const results = [
+                    `<strong>Mediana Original:</strong> ${originalMedian.toFixed(4)}`,
+                    `<strong>IC Mediana ${confidence}%:</strong> [${ciMedian.lower.toFixed(4)}, ${ciMedian.upper.toFixed(4)}]`,
+                    `<strong>Percentil 25 Original:</strong> ${originalP25.toFixed(4)}`,
+                    `<strong>IC P25 ${confidence}%:</strong> [${ciP25.lower.toFixed(4)}, ${ciP25.upper.toFixed(4)}]`,
+                    `<strong>Percentil 75 Original:</strong> ${originalP75.toFixed(4)}`,
+                    `<strong>IC P75 ${confidence}%:</strong> [${ciP75.lower.toFixed(4)}, ${ciP75.upper.toFixed(4)}]`,
+                    `<strong>Rango Intercuartílico:</strong> ${(originalP75 - originalP25).toFixed(4)}`
+                ];
+                
+                showResults(5, results);
+                drawHistogram(bootstrapMedians, 'Distribución Bootstrap de la Mediana');
+                
+            } catch (error) {
+                showError(5, error.message);
+            }
+        }
+
+        // Exercise 6: Razón de Varianzas
+        function calculateExercise6() {
+            try {
+                const dataA = parseData(document.getElementById('dataA6').value);
+                const dataB = parseData(document.getElementById('dataB6').value);
+                const confidence = parseInt(document.getElementById('confidence6').value);
+                
+                if (dataA.length === 0 || dataB.length === 0) {
+                    throw new Error('No se pudieron parsear los datos');
+                }
+                
+                const varA = variance(dataA);
+                const varB = variance(dataB);
+                const originalRatio = varA / varB;
+                
+                const bootstrapRatios = [];
+                for (let i = 0; i < bootstrapSamples; i++) {
+                    const bootVarA = bootstrap(dataA, variance, 1)[0];
+                    const bootVarB = bootstrap(dataB, variance, 1)[0];
+                    bootstrapRatios.push(bootVarA / bootVarB);
+                }
+                
+                const ci = getConfidenceInterval(bootstrapRatios, confidence);
+                const bootstrapMean = mean(bootstrapRatios);
+                const bootstrapSD = standardDeviation(bootstrapRatios);
+                
+                const results = [
+                    `<strong>Varianza Proceso 1:</strong> ${varA.toFixed(4)}`,
+                    `<strong>Varianza Proceso 2:</strong> ${varB.toFixed(4)}`,
+                    `<strong>Razón Original (Var1/Var2):</strong> ${originalRatio.toFixed(4)}`,
+                    `<strong>Razón Bootstrap:</strong> ${bootstrapMean.toFixed(4)}`,
+                    `<strong>Error Estándar:</strong> ${bootstrapSD.toFixed(4)}`,
+                    `<strong>Intervalo de Confianza ${confidence}%:</strong> [${ci.lower.toFixed(4)}, ${ci.upper.toFixed(4)}]`,
+                    `<strong>Interpretación:</strong> ${ci.lower > 1 ? 'Proceso 1 más variable' : ci.upper < 1 ? 'Proceso 2 más variable' : 'Variabilidad similar'}`
+                ];
+                
+                showResults(6, results);
+                drawHistogram(bootstrapRatios, 'Distribución Bootstrap de la Razón de Varianzas');
+                
+            } catch (error) {
+                showError(6, error.message);
+            }
+        }
+
+        // Exercise 7: Regresión
+        function calculateExercise7() {
+            try {
+                const dataX = parseData(document.getElementById('dataX7').value);
+                const dataY = parseData(document.getElementById('dataY7').value);
+                const confidence = parseInt(document.getElementById('confidence7').value);
+                
+                if (dataX.length === 0 || dataY.length === 0) {
+                    throw new Error('No se pudieron parsear los datos');
+                }
+                
+                if (dataX.length !== dataY.length) {
+                    throw new Error('Las dos variables deben tener el mismo número de observaciones');
+                }
+                
+                const originalReg = linearRegression(dataX, dataY);
+                const bootstrapSlopes = [];
+                const bootstrapIntercepts = [];
+                
+                for (let i = 0; i < bootstrapSamples; i++) {
+                    const indices = [];
+                    for (let j = 0; j < dataX.length; j++) {
+                        indices.push(Math.floor(Math.random() * dataX.length));
+                    }
+                    const bootX = indices.map(idx => dataX[idx]);
+                    const bootY = indices.map(idx => dataY[idx]);
+                    const bootReg = linearRegression(bootX, bootY);
+                    bootstrapSlopes.push(bootReg.slope);
+                    bootstrapIntercepts.push(bootReg.intercept);
+                }
+                
+                const ciSlope = getConfidenceInterval(bootstrapSlopes, confidence);
+                const ciIntercept = getConfidenceInterval(bootstrapIntercepts, confidence);
+                
+                const results = [
+                    `<strong>Pendiente Original:</strong> ${originalReg.slope.toFixed(4)}`,
+                    `<strong>IC Pendiente ${confidence}%:</strong> [${ciSlope.lower.toFixed(4)}, ${ciSlope.upper.toFixed(4)}]`,
+                    `<strong>Intercepto Original:</strong> ${originalReg.intercept.toFixed(4)}`,
+                    `<strong>IC Intercepto ${confidence}%:</strong> [${ciIntercept.lower.toFixed(4)}, ${ciIntercept.upper.toFixed(4)}]`,
+                    `<strong>Ecuación:</strong> y = ${originalReg.slope.toFixed(4)}x + ${originalReg.intercept.toFixed(4)}`,
+                    `<strong>Interpretación:</strong> Por cada unidad adicional en publicidad, las ventas aumentan ${originalReg.slope.toFixed(2)} unidades`
+                ];
+                
+                showResults(7, results);
+                drawHistogram(bootstrapSlopes, 'Distribución Bootstrap de la Pendiente');
+                
+            } catch (error) {
+                showError(7, error.message);
+            }
+        }
+
+        // Exercise 8: Diferencia de Proporciones
+        function calculateExercise8() {
+            try {
+                const dataA = parseData(document.getElementById('dataA8').value);
+                const dataB = parseData(document.getElementById('dataB8').value);
+                const confidence = parseInt(document.getElementById('confidence8').value);
+                
+                if (dataA.length === 0 || dataB.length === 0) {
+                    throw new Error('No se pudieron parsear los datos');
+                }
+                
+                // Validar que solo contengan 0s y 1s
+                if (!dataA.every(x => x === 0 || x === 1) || !dataB.every(x => x === 0 || x === 1)) {
+                    throw new Error('Los datos deben contener solo 0s y 1s');
+                }
+                
+                const propA = mean(dataA);
+                const propB = mean(dataB);
+                const originalDiff = propA - propB;
+                
+                const bootstrapDiffs = [];
+                for (let i = 0; i < bootstrapSamples; i++) {
+                    const bootPropA = bootstrap(dataA, mean, 1)[0];
+                    const bootPropB = bootstrap(dataB, mean, 1)[0];
+                    bootstrapDiffs.push(bootPropA - bootPropB);
+                }
+                
+                const ci = getConfidenceInterval(bootstrapDiffs, confidence);
+                const bootstrapMean = mean(bootstrapDiffs);
+                const bootstrapSD = standardDeviation(bootstrapDiffs);
+                
+                const results = [
+                    `<strong>Proporción Tratamiento A:</strong> ${propA.toFixed(4)} (${(propA * 100).toFixed(2)}%)`,
+                    `<strong>Proporción Tratamiento B:</strong> ${propB.toFixed(4)} (${(propB * 100).toFixed(2)}%)`,
+                    `<strong>Diferencia Original (A - B):</strong> ${originalDiff.toFixed(4)}`,
+                    `<strong>Diferencia Bootstrap:</strong> ${bootstrapMean.toFixed(4)}`,
+                    `<strong>Error Estándar:</strong> ${bootstrapSD.toFixed(4)}`,
+                    `<strong>Intervalo de Confianza ${confidence}%:</strong> [${ci.lower.toFixed(4)}, ${ci.upper.toFixed(4)}]`,
+                    `<strong>Interpretación:</strong> ${ci.lower > 0 ? 'Tratamiento A más efectivo' : ci.upper < 0 ? 'Tratamiento B más efectivo' : 'No hay diferencia significativa'}`
+                ];
+                
+                showResults(8, results);
+                drawHistogram(bootstrapDiffs, 'Distribución Bootstrap de la Diferencia de Proporciones');
+                
+            } catch (error) {
+                showError(8, error.message);
+            }
+        }
+
+        // Exercise 9: Bootstrap Paramétrico
+        function calculateExercise9() {
+            try {
+                const data = parseData(document.getElementById('data9').value);
+                const confidence = parseInt(document.getElementById('confidence9').value);
+                
+                if (data.length === 0) {
+                    throw new Error('No se pudieron parsear los datos');
+                }
+                
+                // Estimar lambda para distribución exponencial
+                const originalMean = mean(data);
+                const originalLambda = 1 / originalMean;
+                
+                // Bootstrap paramétrico
+                const bootstrapLambdas = [];
+                const bootstrapMeans = [];
+                
+                for (let i = 0; i < bootstrapSamples; i++) {
+                    // Generar muestra de distribución exponencial con lambda estimado
+                    const bootstrapSample = [];
+                    for (let j = 0; j < data.length; j++) {
+                        // Generar número aleatorio exponencial: -ln(U)/λ
+                        const u = Math.random();
+                        const exponentialValue = -Math.log(u) / originalLambda;
+                        bootstrapSample.push(exponentialValue);
+                    }
+                    const bootMean = mean(bootstrapSample);
+                    const bootLambda = 1 / bootMean;
+                    bootstrapLambdas.push(bootLambda);
+                    bootstrapMeans.push(bootMean);
+                }
+                
+                const ciLambda = getConfidenceInterval(bootstrapLambdas, confidence);
+                const ciMean = getConfidenceInterval(bootstrapMeans, confidence);
+                
+                const results = [
+                    `<strong>Media Original (Vida Media):</strong> ${originalMean.toFixed(4)} días`,
+                    `<strong>Lambda Original:</strong> ${originalLambda.toFixed(6)}`,
+                    `<strong>IC Lambda ${confidence}%:</strong> [${ciLambda.lower.toFixed(6)}, ${ciLambda.upper.toFixed(6)}]`,
+                    `<strong>IC Vida Media ${confidence}%:</strong> [${ciMean.lower.toFixed(4)}, ${ciMean.upper.toFixed(4)}] días`,
+                    `<strong>Tasa de Fallo:</strong> ${(originalLambda * 100).toFixed(4)}% por día`,
+                    `<strong>Método:</strong> Bootstrap Paramétrico (Distribución Exponencial)`
+                ];
+                
+                showResults(9, results);
+                drawHistogram(bootstrapLambdas, 'Distribución Bootstrap de Lambda (Paramétrico)');
+                
+            } catch (error) {
+                showError(9, error.message);
+            }
+        }
+
+        // Exercise 10: Bootstrap con Datos Dependientes
+        function calculateExercise10() {
+            try {
+                const data = parseData(document.getElementById('data10').value);
+                const blockSize = parseInt(document.getElementById('blockSize10').value);
+                const confidence = parseInt(document.getElementById('confidence10').value);
+                
+                if (data.length === 0) {
+                    throw new Error('No se pudieron parsear los datos');
+                }
+                
+                if (blockSize < 2 || blockSize > data.length / 2) {
+                    throw new Error('El tamaño de bloque debe estar entre 2 y la mitad del tamaño de los datos');
+                }
+                
+                const originalVolatility = standardDeviation(data);
+                const bootstrapVolatilities = blockBootstrap(data, blockSize, standardDeviation, bootstrapSamples);
+                const ci = getConfidenceInterval(bootstrapVolatilities, confidence);
+                const bootstrapMean = mean(bootstrapVolatilities);
+                const bootstrapSD = standardDeviation(bootstrapVolatilities);
+                
+                const results = [
+                    `<strong>Volatilidad Original:</strong> ${originalVolatility.toFixed(4)}%`,
+                    `<strong>Volatilidad Bootstrap:</strong> ${bootstrapMean.toFixed(4)}%`,
+                    `<strong>Error Estándar Bootstrap:</strong> ${bootstrapSD.toFixed(4)}`,
+                    `<strong>Intervalo de Confianza ${confidence}%:</strong> [${ci.lower.toFixed(4)}, ${ci.upper.toFixed(4)}]%`,
+                    `<strong>Tamaño de Bloque:</strong> ${blockSize}`,
+                    `<strong>Método:</strong> Bootstrap por Bloques (para datos dependientes)`,
+                    `<strong>Volatilidad Anualizada:</strong> ${(originalVolatility * Math.sqrt(252)).toFixed(4)}%`
+                ];
+                
+                showResults(10, results);
+                drawHistogram(bootstrapVolatilities, 'Distribución Bootstrap de la Volatilidad (por Bloques)');
+                
+            } catch (error) {
+                showError(10, error.message);
+            }
+        }
+
+        function showError(exerciseNum, message) {
+            const resultsDiv = document.getElementById(`results${exerciseNum}`);
+            resultsDiv.innerHTML = `<div class="error">❌ Error: ${message}</div>`;
+            resultsDiv.classList.remove('hidden');
+        }
+
+        // Initialize with first exercise
+        document.addEventListener('DOMContentLoaded', function() {
+            selectExercise(1);
+        });
+    </script>
+</body>
+</html>
